@@ -15,6 +15,7 @@ struct Coin: Codable, Identifiable, Hashable {
     var iconUrl: String
     var price: String
     var performance: String
+    var color: String
     var listedAt: Date
 
     var priceDouble: Double {
@@ -28,6 +29,7 @@ struct Coin: Codable, Identifiable, Hashable {
         case iconUrl
         case price
         case change
+        case color
         case performance = "24hVolume"
         case listedAt
     }

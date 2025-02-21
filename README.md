@@ -14,7 +14,7 @@ Below are some things I would like to address:
 
 - The bookmarking is implemented using a `UserDefaults`, so the bookmarks are saved in the device. This can easily be modified to rely on an external API.
 
-- The testing coverage of the project is above 90%. Tested are both most of the units and some of the UI interaction (searching, bookmarking)
+- The testing coverage of the project is above 85%. Tested are both most of the units and some of the UI interaction (searching, bookmarking)
 
 
 ## API secret setup

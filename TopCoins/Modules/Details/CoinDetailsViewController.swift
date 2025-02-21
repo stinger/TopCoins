@@ -18,6 +18,20 @@ class CoinDetailsViewController: UIViewController {
 
     private var cancellables: Set<AnyCancellable> = []
 
+    lazy var currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter
+    }()
+
+    lazy var relativeDayFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+
+        return formatter
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -49,12 +63,20 @@ class CoinDetailsViewController: UIViewController {
     }
 
     private func bindUI() {
-        viewModel.$coin
+        viewModel.$history
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
 
                 refreshControl.endRefreshing()
+            }
+            .store(in: &cancellables)
+
+        viewModel.$coin
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+
                 let snapshot = generateSnapshot(for: viewModel.coin)
                 dataSource.apply(snapshot, animatingDifferences: false)
             }
@@ -122,12 +144,31 @@ class CoinDetailsViewController: UIViewController {
     }
 
     // Create a list layout for the collection view
-    private func createLayout() -> UICollectionViewLayout {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
-        configuration.showsSeparators = true
-        configuration.backgroundColor = .clear
-        configuration.headerMode = .supplementary
-        return UICollectionViewCompositionalLayout.list(using: configuration)
+    private func createLayout() -> UICollectionViewCompositionalLayout {
+        UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(0.5), heightDimension: .absolute(100))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
+            group.interItemSpacing = .fixed(.zero)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 0
+
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(340))
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerSize,
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+
+            section.boundarySupplementaryItems = [header]
+
+            return section
+        }
     }
 
     // Configure the data source
@@ -140,8 +181,7 @@ class CoinDetailsViewController: UIViewController {
             if let listCell = cell as? UICollectionViewListCell {
                 listCell.backgroundConfiguration = .clear()
                 listCell.contentConfiguration = UIHostingConfiguration {
-                    LabeledContent(item.name, value: item.value)
-                        .font(.body)
+                    CoinDetailCellView(name: item.name, value: item.value)
                 }
             }
             return cell
@@ -168,13 +208,14 @@ class CoinDetailsViewController: UIViewController {
     private func generateSnapshot(for coin: Coin) -> NSDiffableDataSourceSnapshot<Section, CoinDetail> {
         var snapshot: NSDiffableDataSourceSnapshot<Section, CoinDetail> = .init()
         snapshot.appendSections([.main])
+
         snapshot.appendItems([
             .init(name: "Name", value: coin.name),
             .init(name: "Symbol", value: coin.symbol),
-            .init(name: "Price", value: coin.price),
+            .init(name: "Price", value: currencyFormatter.string(from: NSNumber(value: coin.priceDouble)) ?? "n/a"),
             .init(name: "Change", value: coin.change),
             .init(name: "24 hour volume", value: coin.performance),
-            .init(name: "Listed at", value: "\(coin.listedAt)"),
+            .init(name: "Listed", value: relativeDayFormatter.localizedString(for: coin.listedAt, relativeTo: .now)),
         ])
         return snapshot
     }

@@ -17,20 +17,38 @@ struct CoinHistoryChartView: View {
             if !viewModel.history.isEmpty {
                 Chart(viewModel.history, id: \.timestamp) { entry in
                     switch viewModel.chartType {
-                    case .line:
+                    case .line, .area:
                         LineMark(
                             x: .value("Time", entry.timestamp),
                             y: .value("Price", entry.priceDouble)
                         )
-                    case .area:
-                        AreaMark(
-                            x: .value("Time", entry.timestamp),
-                            y: .value("Price", entry.priceDouble)
+                        .foregroundStyle(
+                            Color.accentColor
                         )
+                        if viewModel.chartType == .area {
+                            AreaMark(
+                                x: .value("Time", entry.timestamp),
+                                y: .value("Price", entry.priceDouble)
+                            )
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [
+                                        Color.accentColor.opacity(0.6),
+                                        Color.clear,
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                        }
                     case .dots:
                         PointMark(
                             x: .value("Time", entry.timestamp),
                             y: .value("Price", entry.priceDouble)
+                        )
+                        .symbolSize(2)
+                        .foregroundStyle(
+                            Color.accentColor
                         )
                     }
                 }
@@ -50,7 +68,7 @@ struct CoinHistoryChartView: View {
             }
             .pickerStyle(.segmented)
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 8)
         .padding(.vertical, 8)
     }
 }

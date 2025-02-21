@@ -16,6 +16,7 @@ extension Coin {
         iconUrl: "https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg",
         price: "98235.33136269842",
         performance: "27474028873",
+        color: "#f7931A",
         listedAt: Date(timeIntervalSince1970: 1330214400.0)
     )
 }

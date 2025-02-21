@@ -52,7 +52,7 @@ final class TopCoinsUITests: XCTestCase {
             .children(matching: .other).element(boundBy: 1)
             .tap()
 
-        let item = collectionViewsQuery.staticTexts["Name, Bitcoin"]
+        let item = collectionViewsQuery.staticTexts["Bitcoin"]
 
         XCTAssertTrue(item.exists)
         item.tap()
