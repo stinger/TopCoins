@@ -23,21 +23,130 @@ final class TopCoinsUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testMainViewControllerNavigation() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-useMockData", "-useMockDefaults"]
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let tabBar = app.tabBars["Tab Bar"]
+        let topCoinsButton = tabBar.buttons["Top Coins"]
+        let favouritesButton = tabBar.buttons["Favourites"]
+        let collectionViewsQuery = app.collectionViews
+
+        topCoinsButton.tap()
+
+        let topCoinsNavigationBar = app.navigationBars["Top Coins"]
+        XCTAssertTrue(topCoinsNavigationBar.staticTexts["Top Coins"].exists)
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 5)
+
+        favouritesButton.tap()
+
+        let favouritesNavigationBar = app.navigationBars["Favourites"]
+        XCTAssertTrue(favouritesNavigationBar.staticTexts["Favourites"].exists)
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 0)
+
+        topCoinsButton.tap()
+
+        collectionViewsQuery
+            .children(matching: .cell).element(boundBy: 0)
+            .children(matching: .other).element(boundBy: 1)
+            .tap()
+
+        let item = collectionViewsQuery.staticTexts["Name, Bitcoin"]
+
+        XCTAssertTrue(item.exists)
+        item.tap()
+
+        let bitcoinNavigationBar = app.navigationBars["Bitcoin"]
+        XCTAssertTrue(bitcoinNavigationBar.staticTexts["Bitcoin"].exists)
     }
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    @MainActor func testFavouriteBookmarking() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-useMockData", "-useMockDefaults"]
+        app.launch()
+
+        let tabBar = app.tabBars["Tab Bar"]
+        let topCoinsButton = tabBar.buttons["Top Coins"]
+        let favouritesButton = tabBar.buttons["Favourites"]
+
+        let collectionViewsQuery = app.collectionViews
+
+        favouritesButton.tap()
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 0)
+
+        topCoinsButton.tap()
+
+        // favourite first element
+        collectionViewsQuery.children(matching: .cell)
+            .element(boundBy: 0)
+            .children(matching: .other)
+            .element(boundBy: 1)
+            .swipeLeft()
+
+        collectionViewsQuery.buttons["Favourite"].tap()
+
+        favouritesButton.tap()
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 1)
+
+        // unfavourite first element
+        collectionViewsQuery.children(matching: .cell)
+            .element(boundBy: 0)
+            .children(matching: .other)
+            .element(boundBy: 1)
+            .swipeLeft()
+
+        collectionViewsQuery.buttons["Unfavourite"].tap()
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 0)
+    }
+
+    @MainActor func testFavouritesNavigation() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-useMockData", "-useMockDefaults"]
+        app.launch()
+
+        // favourite an item
+        let collectionViewsQuery = app.collectionViews
+        collectionViewsQuery
+            .children(matching: .cell).element(boundBy: 0)
+            .children(matching: .other).element(boundBy: 1)
+            .swipeLeft()
+
+        collectionViewsQuery.buttons["Favourite"].tap()
+        app.tabBars["Tab Bar"].buttons["Favourites"].tap()
+
+        collectionViewsQuery.cells
+            .children(matching: .other)
+            .element(boundBy: 1).tap()
+
+        XCTAssertTrue(app.navigationBars["Bitcoin"].staticTexts["Bitcoin"].exists)
+    }
+
+    @MainActor func testSearch() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-useMockData", "-useMockDefaults"]
+        app.launch()
+
+        let topCoinsNavigationBar = app.navigationBars["Top Coins"]
+        let collectionViewsQuery = app.collectionViews
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 5)
+
+        let filterByNameSearchField = topCoinsNavigationBar.searchFields["Filter by name"]
+        filterByNameSearchField.tap()
+        filterByNameSearchField.typeText("Bit")
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 1)
+
+        filterByNameSearchField.buttons["Clear text"].tap()
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 5)
+
+        topCoinsNavigationBar.buttons["Cancel"].tap()
+
+        XCTAssertEqual(collectionViewsQuery.children(matching: .cell).count, 5)
     }
 }

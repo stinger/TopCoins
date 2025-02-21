@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CE5D4D372D68B95D00663DC6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CE5D4D362D68B95800663DC6 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CE698C872D665114006D67E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE5D4D362D68B95800663DC6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CE698C702D665112006D67E3 /* TopCoins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopCoins.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE698C862D665114006D67E3 /* TopCoinsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TopCoinsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE698C902D665114006D67E3 /* TopCoinsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TopCoinsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +93,7 @@
 		CE698C672D665112006D67E3 = {
 			isa = PBXGroup;
 			children = (
+				CE5D4D362D68B95800663DC6 /* README.md */,
 				CE698C722D665112006D67E3 /* TopCoins */,
 				CE698C892D665114006D67E3 /* TopCoinsTests */,
 				CE698C932D665114006D67E3 /* TopCoinsUITests */,
@@ -115,6 +121,7 @@
 				CE698C6C2D665112006D67E3 /* Sources */,
 				CE698C6D2D665112006D67E3 /* Frameworks */,
 				CE698C6E2D665112006D67E3 /* Resources */,
+				CE698E372D67526B006D67E3 /* swift-format lint */,
 			);
 			buildRules = (
 			);
@@ -225,6 +232,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE5D4D372D68B95D00663DC6 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +251,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CE698E372D67526B006D67E3 /* swift-format lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "swift-format lint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "linter=$(xcrun --find swift-format)\n\nif [ -z \"$linter\" ]; then\n    echo \"error: swift-format not found\" >&2\n    exit 1\nfi\n\n# Define the configuration file path\nCONFIG_PATH=\"$SRCROOT/.swiftformat\"\n\nif [ -f \"$CONFIG_PATH\" ]; then\n    # Run the linter and capture its output\n    output=$(\"$linter\" lint --configuration \"$CONFIG_PATH\" -r \"$SRCROOT\" 2>&1)\n    \n    echo \"$output\"\nelse\n    echo \"error: Config file not found at: $CONFIG_PATH\" >&2\n    exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE698C6C2D665112006D67E3 /* Sources */ = {
@@ -290,11 +320,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5KLV3M3ZXD;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TopCoins/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -318,11 +348,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5KLV3M3ZXD;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TopCoins/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
