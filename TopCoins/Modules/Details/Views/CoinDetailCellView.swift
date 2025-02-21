@@ -23,7 +23,7 @@ struct CoinDetailCellView: View {
                 Spacer()
 
                 Text(value)
-                    .font(.body)
+                    .font(.body).bold()
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .frame(maxWidth: .infinity)

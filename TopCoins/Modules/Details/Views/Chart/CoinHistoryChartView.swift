@@ -55,7 +55,7 @@ struct CoinHistoryChartView: View {
                 .chartYAxis {
                     AxisMarks(position: .leading)
                 }
-                .padding()
+                .padding(.bottom)
             } else {
                 ContentUnavailableView("Loading data...", systemImage: "chart.line.uptrend.xyaxis")
             }
@@ -68,8 +68,6 @@ struct CoinHistoryChartView: View {
             }
             .pickerStyle(.segmented)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 8)
     }
 }
 

@@ -45,7 +45,7 @@ class CoinDetailsViewController: UIViewController {
         setupRefreshControl()
 
         // Register the cell and the header view
-        collectionView.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: "SwiftUICell")
+        collectionView.register(HostingCollectionViewCell<CoinDetailCellView>.self, forCellWithReuseIdentifier: "SwiftUICell")
         collectionView.register(
             ChartHeaderView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -153,12 +153,13 @@ class CoinDetailsViewController: UIViewController {
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
-            group.interItemSpacing = .fixed(.zero)
+            group.interItemSpacing = .fixed(8)
 
             let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 0
+            section.interGroupSpacing = 8
 
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(340))
+            let headerSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(340))
             let header = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: headerSize,
                 elementKind: UICollectionView.elementKindSectionHeader,
@@ -166,6 +167,7 @@ class CoinDetailsViewController: UIViewController {
             )
 
             section.boundarySupplementaryItems = [header]
+            section.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
 
             return section
         }
@@ -178,11 +180,12 @@ class CoinDetailsViewController: UIViewController {
 
             // Dequeue a cell and configure it with SwiftUI view
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SwiftUICell", for: indexPath)
-            if let listCell = cell as? UICollectionViewListCell {
-                listCell.backgroundConfiguration = .clear()
-                listCell.contentConfiguration = UIHostingConfiguration {
-                    CoinDetailCellView(name: item.name, value: item.value)
-                }
+            cell.backgroundConfiguration = .clear()
+            if let hostingCell = cell as? HostingCollectionViewCell<CoinDetailCellView> {
+                hostingCell.configure(
+                    with: CoinDetailCellView(name: item.name, value: item.value),
+                    parentViewController: self
+                )
             }
             return cell
         }
