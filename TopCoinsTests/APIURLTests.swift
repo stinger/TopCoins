@@ -26,6 +26,19 @@ final class APIURLTests: XCTestCase {
         }
     }
 
+    func testCoinDetailsRequest() {
+        let coin: Coin = .bitcoin
+        let sut = APIURL.coinDetails(coin.uuid).request
+
+        XCTAssertNotNil(sut)
+        XCTAssertEqual(sut?.httpMethod, "GET")
+        XCTAssertEqual(sut?.allHTTPHeaderFields?["x-access-token"], APIConfiguration.apiKey)
+        XCTAssertEqual(
+            sut?.url?.absoluteString,
+            "https://api.coinranking.com/v2/coin/\(coin.uuid)"
+        )
+    }
+
     func testCoinHistoryRequest() {
         for timespan in Timespan.allCases {
             let sut = APIURL.history("fake", timespan).request

@@ -24,11 +24,10 @@ class ChartHeaderView: UICollectionReusableView {
         addSubview(chartView)
 
         NSLayoutConstraint.activate([
-            chartView.topAnchor.constraint(equalTo: topAnchor),
+            chartView.topAnchor.constraint(equalTo: topAnchor, constant: 16.0),
             chartView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             chartView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             chartView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            chartView.heightAnchor.constraint(equalToConstant: 300),
         ])
     }
 }

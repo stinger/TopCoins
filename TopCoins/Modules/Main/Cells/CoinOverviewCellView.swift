@@ -8,16 +8,7 @@
 import SwiftUI
 import UIKit
 
-class CoinOverviewCell: UICollectionViewCell {
-    var configuration: UIContentConfiguration?
-
-    override func updateConfiguration(using state: UICellConfigurationState) {
-        super.updateConfiguration(using: state)
-        contentConfiguration = configuration
-    }
-}
-
-struct CoinOverviewView: View {
+struct CoinOverviewCellView: View {
     var coin: Coin
 
     var body: some View {
@@ -32,25 +23,25 @@ struct CoinOverviewView: View {
                     .scaledToFit()
             }
             .foregroundStyle(Color.secondary)
-            .frame(maxWidth: 40, maxHeight: 40)
-            .padding(.trailing, 16)
+            .frame(maxWidth: 36, maxHeight: 36)
+            .padding(.trailing, 8)
 
             Text(coin.name)
                 .font(.body)
+                .frame(maxHeight: .infinity, alignment: .center)
 
             Spacer()
 
             VStack(alignment: .trailing) {
-                Text(coin.priceDouble, format: .currency(code: "USD"))
-
                 Text(coin.change)
+                    .bold()
                     .foregroundStyle(coin.change.starts(with: "-") ? Color.red : Color.green)
 
+                Text(coin.priceDouble, format: .currency(code: "USD"))
             }
             .foregroundStyle(.secondary)
             .font(.footnote)
 
         }
-        .padding(.horizontal)
     }
 }

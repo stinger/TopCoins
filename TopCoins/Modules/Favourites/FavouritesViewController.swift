@@ -119,7 +119,7 @@ final class FavouritesViewController: UIViewController {
                 listCell.accessories = [.disclosureIndicator()]
                 listCell.backgroundConfiguration = .clear()
                 listCell.contentConfiguration = UIHostingConfiguration {
-                    CoinOverviewView(coin: item)
+                    FavouriteCoinCellView(coin: item)
                 }
             }
             return cell

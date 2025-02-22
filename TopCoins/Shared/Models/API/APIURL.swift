@@ -12,12 +12,15 @@ enum APIURL {
     typealias Offset = Int
 
     case coins(Limit, Offset, CoinSorter)
+    case coinDetails(String)
     case history(String, Timespan)
 
     var path: String {
         switch self {
         case .coins:
             return "/coins"
+        case .coinDetails(let uuid):
+            return "/coin/\(uuid)"
         case .history(let uuid, _):
             return "/coin/\(uuid)/history"
         }
@@ -43,6 +46,8 @@ enum APIURL {
             [
                 .init(name: "timePeriod", value: period.rawValue)
             ]
+        default:
+            nil
         }
     }
 

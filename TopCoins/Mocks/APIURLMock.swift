@@ -15,12 +15,15 @@ protocol APIURLMock: CaseIterable, Sendable {
 
 enum CoinbaseAPIURLMock: String, APIURLMock {
     case coins
+    case coinDetails
     case history
 
     var apiURL: APIURL {
         switch self {
         case .coins:
             return APIURL.coins(20, 0, .marketCap)
+        case .coinDetails:
+            return APIURL.coinDetails(Coin.bitcoin.uuid)
         case .history:
             return APIURL.history(Coin.bitcoin.uuid, .oneWeek)
         }

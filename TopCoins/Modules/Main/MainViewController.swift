@@ -148,7 +148,7 @@ class MainViewController: UIViewController {
                 listCell.backgroundConfiguration = .clear()
                 listCell.accessories = [.disclosureIndicator()]
                 listCell.contentConfiguration = UIHostingConfiguration {
-                    CoinOverviewView(coin: item)
+                    CoinOverviewCellView(coin: item)
                 }
             }
             return cell

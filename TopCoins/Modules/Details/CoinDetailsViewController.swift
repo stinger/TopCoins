@@ -73,6 +73,7 @@ class CoinDetailsViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.$coin
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
@@ -93,6 +94,7 @@ class CoinDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        viewModel.fetchCoinDetails()
         viewModel.fetchCoinHistory()
     }
 

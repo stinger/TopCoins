@@ -46,8 +46,28 @@ class CoinDetailsViewModel: ObservableObject {
         }
     }
 
+    func fetchCoinDetails() {
+        Task {
+            do {
+                let response: APIResponse<CoinData> = try await fetch(
+                    APIURL.coinDetails(coin.uuid),
+                    using: urlSession
+                )
+
+                await updateCoin(with: response.data)
+            } catch let error {
+                os_log(.error, "Error loading coin details: %@", error.localizedDescription)
+            }
+        }
+    }
+
     @MainActor
     private func updateChart(with data: CoinHistoryData) {
         history = data.history.filter { $0.price != nil }
+    }
+
+    @MainActor
+    private func updateCoin(with data: CoinData) {
+        coin = data.coin
     }
 }

@@ -13,7 +13,7 @@ import XCTest
 final class CoinDetailsViewModelTests: XCTestCase {
     private var cancellables: Set<AnyCancellable> = []
 
-    func testAPIDataFetchingAndParsing() throws {
+    func testCoinHistoryFetchingAndParsing() throws {
         let sut = CoinDetailsViewModel(coin: .bitcoin, urlSession: .mock)
 
         let expectation = XCTestExpectation(description: "Wait for the data")
@@ -34,5 +34,27 @@ final class CoinDetailsViewModelTests: XCTestCase {
 
         XCTAssertFalse(expectedHistory.isEmpty)
         XCTAssertEqual(expectedHistory.count, 60)
+    }
+
+    func testCoinDetailsFetchingAndParsing() throws {
+        let sut = CoinDetailsViewModel(coin: .bitcoin, urlSession: .mock)
+
+        let expectation = XCTestExpectation(description: "Wait for the data")
+        var expectedCoin: Coin?
+
+        sut.$coin
+            .dropFirst(1)
+            .sink { value in
+                expectedCoin = value
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        sut.fetchCoinDetails()
+
+        wait(for: [expectation], timeout: 1.0)
+
+        XCTAssertNotNil(expectedCoin)
+        XCTAssertEqual(expectedCoin, Coin.bitcoin)
     }
 }
