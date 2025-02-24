@@ -12,7 +12,7 @@ Below are some things I would like to address:
 
 - The chosen networking stack is testable (see `APIURLTests.swift`) to the point where we can have mock response JSONs for any endpoint URL (although just some cases are mocked in the demo).
 
-- The bookmarking is implemented using a `UserDefaults`, so the bookmarks are saved in the device. This can easily be modified to rely on an external API.
+- The bookmarking is implemented using a `UserDefaults`, so the bookmarks are saved on the device. This can easily be modified to rely on an external API.
 
 - The testing coverage of the project is above 85%. Tested are both most of the units and some of the UI interaction (searching, bookmarking)
 
